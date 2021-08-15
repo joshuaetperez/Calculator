@@ -38,3 +38,19 @@ function operate(operator, a, b) {
     }
 }
 
+// Takes the number the user clicked on and adds it to the display
+function addToDisplay(e) {
+    numberDisplayed = this.id;
+    const calcDisplay = document.querySelector('.display');
+    calcDisplay.textContent = numberDisplayed;
+}
+
+// Global variables
+let numberDisplayed = 0;
+
+// DOM variables
+const numberButtons = document.querySelectorAll('button[class=number]');
+
+numberButtons.forEach(numberButton => {
+    numberButton.addEventListener('click', addToDisplay);
+});
