@@ -1,0 +1,15 @@
+.display {
+    text-align: center;
+    margin: 10px 0;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    width: 45%;
+    margin: 0px auto;
+}
+
+.zero {
+    grid-column: 1 / span 2;
+}
