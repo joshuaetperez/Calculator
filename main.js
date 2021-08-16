@@ -97,6 +97,17 @@ function evaluate() {
     lastPressedButtonWasNumber = false;
 }
 
+// Resets global variables to initial values and resets display
+function clear() {
+    firstNumberDisplayed = 0;
+    currentNumberDisplayed = 0;
+    operatorStored = null;
+    resetDisplay = false;
+    numbersChosen = 0;
+    lastPressedButtonWasNumber = true;
+    calcDisplay.textContent = '0';
+}
+
 // function debug() {
 //     console.log(`firstNumberDisplayed: ${firstNumberDisplayed}`);
 //     console.log(`currentNumberDisplayed: ${currentNumberDisplayed}`);
@@ -119,6 +130,7 @@ const calcDisplay = document.querySelector('.display');
 const numberButtons = document.querySelectorAll('.number, .zero');
 const operatorButtons = document.querySelectorAll('.operator');
 const evaluatorButton = document.querySelector('.evaluator');
+const clearButton = document.querySelector('.clear');
 
 // Event listeners
 numberButtons.forEach(numberButton => {
@@ -130,3 +142,5 @@ operatorButtons.forEach(operatorButton => {
 });
 
 evaluatorButton.addEventListener('click', evaluate);
+
+clearButton.addEventListener('click', clear);
