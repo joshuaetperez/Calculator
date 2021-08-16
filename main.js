@@ -108,6 +108,24 @@ function clear() {
     calcDisplay.textContent = '0';
 }
 
+// Changes the sign of the displayed number
+function changeSign() {
+    // If the number 0 is on the display OR the error 'Cannot divide by 0' is on the display, exit function without doing anything
+    if (currentNumberDisplayed == 0 || (firstNumberDisplayed == null && currentNumberDisplayed == null)) {
+        return;
+    }
+    else if (currentNumberDisplayed > 0) {
+        calcDisplay.textContent = '-' + calcDisplay.textContent;
+    }
+    else {
+        calcDisplay.textContent = calcDisplay.textContent.slice(1);
+    }
+    if (operatorStored == null) {
+        firstNumberDisplayed = -firstNumberDisplayed;
+    }
+    currentNumberDisplayed = -currentNumberDisplayed;
+}
+
 // function debug() {
 //     console.log(`firstNumberDisplayed: ${firstNumberDisplayed}`);
 //     console.log(`currentNumberDisplayed: ${currentNumberDisplayed}`);
@@ -131,6 +149,7 @@ const numberButtons = document.querySelectorAll('.number, .zero');
 const operatorButtons = document.querySelectorAll('.operator');
 const evaluatorButton = document.querySelector('.evaluator');
 const clearButton = document.querySelector('.clear');
+const unaryButton = document.querySelector('.unary');
 
 // Event listeners
 numberButtons.forEach(numberButton => {
@@ -144,3 +163,5 @@ operatorButtons.forEach(operatorButton => {
 evaluatorButton.addEventListener('click', evaluate);
 
 clearButton.addEventListener('click', clear);
+
+unaryButton.addEventListener('click', changeSign);
