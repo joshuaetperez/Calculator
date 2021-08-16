@@ -39,7 +39,7 @@ function operate(operator, a, b) {
 }
 
 // Takes the number the user clicked on and adds it to the display
-function addToDisplay(e) {
+function addToDisplay() {
     if (resetDisplay) {
         calcDisplay.textContent = '0';
         resetDisplay = false;
@@ -54,26 +54,53 @@ function addToDisplay(e) {
     if (operatorStored == null) {
         firstNumberDisplayed = currentNumberDisplayed;
     }
+    lastPressedButtonWasNumber = true;
 }
 
 // Takes the operator the user clicked on and stores it for later use
-function storeOperator(e) {
+function storeOperator() {
+    if (!resetDisplay && numbersChosen != 2) {
+        numbersChosen++;
+    }
+    if (numbersChosen == 2 && lastPressedButtonWasNumber) {
+        evaluate();
+    }
     operatorStored = this.id;
     resetDisplay = true;
 }
 
-function evaluate(e) {
+// Calculates the result of the inputs given by the user
+function evaluate() {
+    if (operatorStored == null) {
+        return;
+    }
+    if (this.className == 'evaluator') {
+        numbersChosen = 0;
+    }
     const result = operate(operatorStored, firstNumberDisplayed, currentNumberDisplayed);
     calcDisplay.textContent = result;
     firstNumberDisplayed = result;
     currentNumberDisplayed = result;
+    operatorStored = null;
+    lastPressedButtonWasNumber = false;
 }
+
+// function debug() {
+//     console.log(`firstNumberDisplayed: ${firstNumberDisplayed}`);
+//     console.log(`currentNumberDisplayed: ${currentNumberDisplayed}`);
+//     console.log(`operatorStored: ${operatorStored}`);
+//     console.log(`resetDisplay: ${resetDisplay}`);
+//     console.log(`numbersChosen: ${numbersChosen}`);
+//     console.log(`lastPressedButtonWasNumber: ${lastPressedButtonWasNumber}`);
+// }
 
 // Global variables
 let firstNumberDisplayed = 0;
 let currentNumberDisplayed = 0;
 let operatorStored = null;
 let resetDisplay = false;
+let numbersChosen = 0; // If numbersChosen == 2, that means two inputs have been put in
+let lastPressedButtonWasNumber = true;
 
 // DOM variables
 const calcDisplay = document.querySelector('.display');
