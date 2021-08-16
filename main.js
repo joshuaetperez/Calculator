@@ -40,7 +40,8 @@ function operate(operator, a, b) {
 
 // Takes the number the user clicked on and adds it to the display
 function addToDisplay() {
-    if (resetDisplay) {
+    // If an operator button has been the most recently pressed OR the error 'Cannot divide by 0' is on the display, reset the display text
+    if (resetDisplay || (firstNumberDisplayed == null && currentNumberDisplayed == null)) {
         calcDisplay.textContent = '0';
         resetDisplay = false;
     }
@@ -59,6 +60,10 @@ function addToDisplay() {
 
 // Takes the operator the user clicked on and stores it for later use
 function storeOperator() {
+    // If the error 'Cannot divide by 0' is on the display, make the operator buttons do nothing
+    if (firstNumberDisplayed == null && currentNumberDisplayed == null) {
+        return;
+    }
     if (!resetDisplay && numbersChosen != 2) {
         numbersChosen++;
     }
@@ -79,8 +84,15 @@ function evaluate() {
     }
     const result = operate(operatorStored, firstNumberDisplayed, currentNumberDisplayed);
     calcDisplay.textContent = result;
-    firstNumberDisplayed = result;
-    currentNumberDisplayed = result;
+    if (result == 'Cannot divide by 0') {
+        firstNumberDisplayed = null;
+        currentNumberDisplayed = null;
+        numbersChosen = 0;
+    }
+    else {
+        firstNumberDisplayed = result;
+        currentNumberDisplayed = result;
+    }
     operatorStored = null;
     lastPressedButtonWasNumber = false;
 }
