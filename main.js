@@ -81,10 +81,13 @@ function evaluate() {
     if (operatorStored == null) {
         return;
     }
+    const result = operate(operatorStored, firstNumberDisplayed, currentNumberDisplayed);
     if (this.className == 'evaluator') {
         numbersChosen = 0;
+        if (!isADecimal(result)) {
+            hasADecimal = false;
+        }
     }
-    const result = operate(operatorStored, firstNumberDisplayed, currentNumberDisplayed);
     calcDisplay.textContent = result;
     if (result == 'Cannot divide by 0') {
         firstNumberDisplayed = null;
@@ -145,15 +148,25 @@ function addDecimal() {
     }
 }
 
-// function debug() {
-//     console.log(`firstNumberDisplayed: ${firstNumberDisplayed}`);
-//     console.log(`currentNumberDisplayed: ${currentNumberDisplayed}`);
-//     console.log(`operatorStored: ${operatorStored}`);
-//     console.log(`resetDisplay: ${resetDisplay}`);
-//     console.log(`numbersChosen: ${numbersChosen}`);
-//     console.log(`lastPressedButtonWasNumber: ${lastPressedButtonWasNumber}`);
-//     console.log(`hasADecimal: ${hasADecimal}`);
-// }
+// Helper function that determines whether a number is a decimal or not
+// Note: numbers such as 5. and 5.0 are NOT considered decimals
+function isADecimal(num) {
+    let absNum = Math.abs(num);
+    if (absNum - Math.floor(absNum) == 0) {
+        return false;
+    } 
+    return true;
+}
+
+function debug() {
+    console.log(`firstNumberDisplayed: ${firstNumberDisplayed}`);
+    console.log(`currentNumberDisplayed: ${currentNumberDisplayed}`);
+    console.log(`operatorStored: ${operatorStored}`);
+    console.log(`resetDisplay: ${resetDisplay}`);
+    console.log(`numbersChosen: ${numbersChosen}`);
+    console.log(`lastPressedButtonWasNumber: ${lastPressedButtonWasNumber}`);
+    console.log(`hasADecimal: ${hasADecimal}`);
+}
 
 // Global variables
 let firstNumberDisplayed = 0;
