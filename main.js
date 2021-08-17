@@ -45,7 +45,7 @@ function addToDisplay() {
         calcDisplay.textContent = '0';
         resetDisplay = false;
     }
-    if (calcDisplay.textContent == '0') {
+    if (calcDisplay.textContent == '0' && !hasADecimal) {
         calcDisplay.textContent = this.id;
     }
     else {
@@ -58,7 +58,8 @@ function addToDisplay() {
     lastPressedButtonWasNumber = true;
 }
 
-// Takes the operator the user clicked on and stores it for later use
+// Takes the operator the user clicked on and stores it for later use with the evaluation (=) button 
+// If a pair of two numbers has already been decided, evaluate with the specified operator
 function storeOperator() {
     // If the error 'Cannot divide by 0' is on the display, make the operator buttons do nothing
     if (firstNumberDisplayed == null && currentNumberDisplayed == null) {
@@ -98,7 +99,7 @@ function evaluate() {
     lastPressedButtonWasNumber = false;
 }
 
-// Resets global variables to initial values and resets display
+// Resets all global variables to initial values and resets display
 function clear() {
     firstNumberDisplayed = 0;
     currentNumberDisplayed = 0;
@@ -130,31 +131,29 @@ function changeSign() {
 
 // Adds a decimal to the number on the display if there is not one present
 function addDecimal() {
+    // If the previous button pressed was a number
     if (!hasADecimal && !resetDisplay) {
         calcDisplay.textContent += '.';
         hasADecimal = true;
     }
+    // If the previous button pressed was an operator
+    else if (!hasADecimal && resetDisplay) {
+        calcDisplay.textContent = '0.'
+        currentNumberDisplayed = 0;
+        resetDisplay = false;
+        hasADecimal = true;
+    }
 }
 
-// Helper function that determines whether a number is a decimal or not
-// Note: numbers such as 5. and 5.0 are NOT considered decimals
-function isADecimal(num) {
-    let absNum = Math.abs(num);
-    if (absNum - Math.floor(absNum) == 0) {
-        return false;
-    } 
-    return true;
-}
-
-function debug() {
-    console.log(`firstNumberDisplayed: ${firstNumberDisplayed}`);
-    console.log(`currentNumberDisplayed: ${currentNumberDisplayed}`);
-    console.log(`operatorStored: ${operatorStored}`);
-    console.log(`resetDisplay: ${resetDisplay}`);
-    console.log(`numbersChosen: ${numbersChosen}`);
-    console.log(`lastPressedButtonWasNumber: ${lastPressedButtonWasNumber}`);
-    console.log(`hasADecimal: ${hasADecimal}`);
-}
+// function debug() {
+//     console.log(`firstNumberDisplayed: ${firstNumberDisplayed}`);
+//     console.log(`currentNumberDisplayed: ${currentNumberDisplayed}`);
+//     console.log(`operatorStored: ${operatorStored}`);
+//     console.log(`resetDisplay: ${resetDisplay}`);
+//     console.log(`numbersChosen: ${numbersChosen}`);
+//     console.log(`lastPressedButtonWasNumber: ${lastPressedButtonWasNumber}`);
+//     console.log(`hasADecimal: ${hasADecimal}`);
+// }
 
 // Global variables
 let firstNumberDisplayed = 0;
