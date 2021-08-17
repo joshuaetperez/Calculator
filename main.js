@@ -75,6 +75,7 @@ function storeOperator() {
     }
     operatorStored = this.id;
     resetDisplay = true;
+    subDisplay.textContent = `${firstNumberDisplayed} ${operatorStored} `;
 }
 
 // Calculates the result of the inputs given by the user
@@ -83,9 +84,6 @@ function evaluate() {
         return;
     }
     const result = operate(operatorStored, firstNumberDisplayed, currentNumberDisplayed);
-    if (this.className == 'evaluator') {
-        numbersChosen = 0;
-    }
     if (this.className == 'evaluator' || this.id == '/') {
         if (isADecimal(result)) {
             hasADecimal = true;
@@ -95,6 +93,10 @@ function evaluate() {
         }
     }
     calcDisplay.textContent = result;
+    if (this.className == 'evaluator') {
+        numbersChosen = 0;
+        subDisplay.textContent = `${firstNumberDisplayed} ${operatorStored} ${currentNumberDisplayed} = `;
+    }
     if (result == 'Cannot divide by 0') {
         firstNumberDisplayed = null;
         currentNumberDisplayed = null;
@@ -108,7 +110,7 @@ function evaluate() {
     lastPressedButtonWasNumber = false;
 }
 
-// Resets all global variables to initial values and resets display
+// Resets all global variables to initial values and resets both displays
 function clear() {
     firstNumberDisplayed = 0;
     currentNumberDisplayed = 0;
@@ -118,6 +120,7 @@ function clear() {
     lastPressedButtonWasNumber = true;
     hasADecimal = false;
     calcDisplay.textContent = '0';
+    subDisplay.textContent = '';
 }
 
 // Changes the sign of the displayed number
@@ -210,7 +213,8 @@ let lastPressedButtonWasNumber = true;
 let hasADecimal = false;
 
 // DOM variables
-const calcDisplay = document.querySelector('.display');
+const calcDisplay = document.querySelector('.main-display');
+const subDisplay = document.querySelector('.sub-display');
 const numberButtons = document.querySelectorAll('.number, .zero');
 const operatorButtons = document.querySelectorAll('.operator');
 const evaluatorButton = document.querySelector('.evaluator');

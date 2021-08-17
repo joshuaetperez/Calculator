@@ -1,4 +1,13 @@
-.display {
+.container {
+    width: 45%;
+    margin: 0 auto;
+}
+
+.sub-display {
+    text-align: center;
+}
+
+.main-display {
     text-align: center;
     margin: 10px 0;
 }
@@ -6,7 +15,6 @@
 .grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    width: 45%;
     margin: 0px auto;
 }
 
