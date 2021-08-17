@@ -67,6 +67,7 @@ function storeOperator() {
     if (!resetDisplay && numbersChosen != 2) {
         numbersChosen++;
     }
+    hasADecimal = false;
     if (numbersChosen == 2 && lastPressedButtonWasNumber) {
         evaluate();
     }
@@ -105,6 +106,7 @@ function clear() {
     resetDisplay = false;
     numbersChosen = 0;
     lastPressedButtonWasNumber = true;
+    hasADecimal = false;
     calcDisplay.textContent = '0';
 }
 
@@ -126,14 +128,33 @@ function changeSign() {
     currentNumberDisplayed = -currentNumberDisplayed;
 }
 
-// function debug() {
-//     console.log(`firstNumberDisplayed: ${firstNumberDisplayed}`);
-//     console.log(`currentNumberDisplayed: ${currentNumberDisplayed}`);
-//     console.log(`operatorStored: ${operatorStored}`);
-//     console.log(`resetDisplay: ${resetDisplay}`);
-//     console.log(`numbersChosen: ${numbersChosen}`);
-//     console.log(`lastPressedButtonWasNumber: ${lastPressedButtonWasNumber}`);
-// }
+// Adds a decimal to the number on the display if there is not one present
+function addDecimal() {
+    if (!hasADecimal && !resetDisplay) {
+        calcDisplay.textContent += '.';
+        hasADecimal = true;
+    }
+}
+
+// Helper function that determines whether a number is a decimal or not
+// Note: numbers such as 5. and 5.0 are NOT considered decimals
+function isADecimal(num) {
+    let absNum = Math.abs(num);
+    if (absNum - Math.floor(absNum) == 0) {
+        return false;
+    } 
+    return true;
+}
+
+function debug() {
+    console.log(`firstNumberDisplayed: ${firstNumberDisplayed}`);
+    console.log(`currentNumberDisplayed: ${currentNumberDisplayed}`);
+    console.log(`operatorStored: ${operatorStored}`);
+    console.log(`resetDisplay: ${resetDisplay}`);
+    console.log(`numbersChosen: ${numbersChosen}`);
+    console.log(`lastPressedButtonWasNumber: ${lastPressedButtonWasNumber}`);
+    console.log(`hasADecimal: ${hasADecimal}`);
+}
 
 // Global variables
 let firstNumberDisplayed = 0;
@@ -142,6 +163,7 @@ let operatorStored = null;
 let resetDisplay = false;
 let numbersChosen = 0; // If numbersChosen == 2, that means two inputs have been put in
 let lastPressedButtonWasNumber = true;
+let hasADecimal = false;
 
 // DOM variables
 const calcDisplay = document.querySelector('.display');
@@ -150,18 +172,16 @@ const operatorButtons = document.querySelectorAll('.operator');
 const evaluatorButton = document.querySelector('.evaluator');
 const clearButton = document.querySelector('.clear');
 const unaryButton = document.querySelector('.unary');
+const decimalButton = document.querySelector('.decimal');
 
 // Event listeners
 numberButtons.forEach(numberButton => {
     numberButton.addEventListener('click', addToDisplay);
 });
-
 operatorButtons.forEach(operatorButton => {
     operatorButton.addEventListener('click', storeOperator);
 });
-
 evaluatorButton.addEventListener('click', evaluate);
-
 clearButton.addEventListener('click', clear);
-
 unaryButton.addEventListener('click', changeSign);
+decimalButton.addEventListener('click', addDecimal);
