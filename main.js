@@ -43,6 +43,7 @@ function addToDisplay() {
     // If an operator button has been the most recently pressed OR the error 'Cannot divide by 0' is on the display, reset the display text
     if (resetDisplay || (firstNumberDisplayed == null && currentNumberDisplayed == null)) {
         calcDisplay.textContent = '0';
+        hasADecimal = false;
         resetDisplay = false;
     }
     if (calcDisplay.textContent == '0' && !hasADecimal) {
@@ -84,7 +85,12 @@ function evaluate() {
     const result = operate(operatorStored, firstNumberDisplayed, currentNumberDisplayed);
     if (this.className == 'evaluator') {
         numbersChosen = 0;
-        if (!isADecimal(result)) {
+    }
+    if (this.className == 'evaluator' || this.id == '/') {
+        if (isADecimal(result)) {
+            hasADecimal = true;
+        }
+        else {
             hasADecimal = false;
         }
     }
@@ -158,15 +164,15 @@ function isADecimal(num) {
     return true;
 }
 
-function debug() {
-    console.log(`firstNumberDisplayed: ${firstNumberDisplayed}`);
-    console.log(`currentNumberDisplayed: ${currentNumberDisplayed}`);
-    console.log(`operatorStored: ${operatorStored}`);
-    console.log(`resetDisplay: ${resetDisplay}`);
-    console.log(`numbersChosen: ${numbersChosen}`);
-    console.log(`lastPressedButtonWasNumber: ${lastPressedButtonWasNumber}`);
-    console.log(`hasADecimal: ${hasADecimal}`);
-}
+// function debug() {
+//     console.log(`firstNumberDisplayed: ${firstNumberDisplayed}`);
+//     console.log(`currentNumberDisplayed: ${currentNumberDisplayed}`);
+//     console.log(`operatorStored: ${operatorStored}`);
+//     console.log(`resetDisplay: ${resetDisplay}`);
+//     console.log(`numbersChosen: ${numbersChosen}`);
+//     console.log(`lastPressedButtonWasNumber: ${lastPressedButtonWasNumber}`);
+//     console.log(`hasADecimal: ${hasADecimal}`);
+// }
 
 // Global variables
 let firstNumberDisplayed = 0;
