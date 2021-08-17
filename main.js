@@ -164,15 +164,38 @@ function isADecimal(num) {
     return true;
 }
 
-// function debug() {
-//     console.log(`firstNumberDisplayed: ${firstNumberDisplayed}`);
-//     console.log(`currentNumberDisplayed: ${currentNumberDisplayed}`);
-//     console.log(`operatorStored: ${operatorStored}`);
-//     console.log(`resetDisplay: ${resetDisplay}`);
-//     console.log(`numbersChosen: ${numbersChosen}`);
-//     console.log(`lastPressedButtonWasNumber: ${lastPressedButtonWasNumber}`);
-//     console.log(`hasADecimal: ${hasADecimal}`);
-// }
+// Removes the last character from the display
+function backspace() {
+    if (calcDisplay.textContent == '0') {
+        return;
+    }
+    else if (Math.floor(calcDisplay.textContent / 10) == 0 && !hasADecimal) {
+        calcDisplay.textContent = '0';
+        currentNumberDisplayed = 0;
+    }
+    else if (calcDisplay.textContent.slice(-2, -1) == '.') {
+        calcDisplay.textContent = calcDisplay.textContent.slice(0, -1);
+        currentNumberDisplayed = calcDisplay.textContent;
+        hasADecimal = false;
+    }
+    else {
+        calcDisplay.textContent = calcDisplay.textContent.slice(0, -1);
+        currentNumberDisplayed = calcDisplay.textContent;
+    }
+    if (operatorStored == null) {
+        firstNumberDisplayed = currentNumberDisplayed;   
+    }
+}
+
+function debug() {
+    console.log(`firstNumberDisplayed: ${firstNumberDisplayed}`);
+    console.log(`currentNumberDisplayed: ${currentNumberDisplayed}`);
+    console.log(`operatorStored: ${operatorStored}`);
+    console.log(`resetDisplay: ${resetDisplay}`);
+    console.log(`numbersChosen: ${numbersChosen}`);
+    console.log(`lastPressedButtonWasNumber: ${lastPressedButtonWasNumber}`);
+    console.log(`hasADecimal: ${hasADecimal}`);
+}
 
 // Global variables
 let firstNumberDisplayed = 0;
@@ -191,6 +214,7 @@ const evaluatorButton = document.querySelector('.evaluator');
 const clearButton = document.querySelector('.clear');
 const unaryButton = document.querySelector('.unary');
 const decimalButton = document.querySelector('.decimal');
+const backspaceButton = document.querySelector('.backspace');
 
 // Event listeners
 numberButtons.forEach(numberButton => {
@@ -203,3 +227,4 @@ evaluatorButton.addEventListener('click', evaluate);
 clearButton.addEventListener('click', clear);
 unaryButton.addEventListener('click', changeSign);
 decimalButton.addEventListener('click', addDecimal);
+backspaceButton.addEventListener('click', backspace);
