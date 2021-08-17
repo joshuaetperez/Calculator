@@ -166,20 +166,23 @@ function isADecimal(num) {
 
 // Removes the last character from the display
 function backspace() {
-    if (calcDisplay.textContent == '0') {
+    let displayText = calcDisplay.textContent;
+    if (displayText == '0') {
         return;
     }
-    else if (Math.floor(calcDisplay.textContent / 10) == 0 && !hasADecimal) {
+    // If the number in the display is a single digit integer, replace it with a 0
+    else if ((displayText.length == 2 && displayText.slice(0, 1) == '-') || displayText.length == 1) {
         calcDisplay.textContent = '0';
         currentNumberDisplayed = 0;
+        hasADecimal = false;
     }
-    else if (calcDisplay.textContent.slice(-2, -1) == '.') {
-        calcDisplay.textContent = calcDisplay.textContent.slice(0, -1);
+    else if (displayText.slice(-2, -1) == '.') {
+        calcDisplay.textContent = displayText.slice(0, -1);
         currentNumberDisplayed = calcDisplay.textContent;
         hasADecimal = false;
     }
     else {
-        calcDisplay.textContent = calcDisplay.textContent.slice(0, -1);
+        calcDisplay.textContent = displayText.slice(0, -1);
         currentNumberDisplayed = calcDisplay.textContent;
     }
     if (operatorStored == null) {
@@ -187,15 +190,15 @@ function backspace() {
     }
 }
 
-function debug() {
-    console.log(`firstNumberDisplayed: ${firstNumberDisplayed}`);
-    console.log(`currentNumberDisplayed: ${currentNumberDisplayed}`);
-    console.log(`operatorStored: ${operatorStored}`);
-    console.log(`resetDisplay: ${resetDisplay}`);
-    console.log(`numbersChosen: ${numbersChosen}`);
-    console.log(`lastPressedButtonWasNumber: ${lastPressedButtonWasNumber}`);
-    console.log(`hasADecimal: ${hasADecimal}`);
-}
+// function debug() {
+//     console.log(`firstNumberDisplayed: ${firstNumberDisplayed}`);
+//     console.log(`currentNumberDisplayed: ${currentNumberDisplayed}`);
+//     console.log(`operatorStored: ${operatorStored}`);
+//     console.log(`resetDisplay: ${resetDisplay}`);
+//     console.log(`numbersChosen: ${numbersChosen}`);
+//     console.log(`lastPressedButtonWasNumber: ${lastPressedButtonWasNumber}`);
+//     console.log(`hasADecimal: ${hasADecimal}`);
+// }
 
 // Global variables
 let firstNumberDisplayed = 0;
