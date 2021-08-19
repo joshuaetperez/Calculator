@@ -77,6 +77,9 @@ function storeOperator(e) {
     }
     if (numbersChosen == 2) {
         evaluate();
+        if (firstNumberDisplayed == null) {
+            return;
+        }
     }
     operatorStored = input;
     resetDisplay = true;
