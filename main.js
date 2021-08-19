@@ -43,10 +43,9 @@ function addToDisplay() {
     // If an operator button has been the most recently pressed OR the error 'Cannot divide by 0' is on the display, reset the display text
     if (resetDisplay || firstNumberDisplayed == null) {
         calcDisplay.textContent = '0';
-        hasADecimal = false;
         resetDisplay = false;
     }
-    if (calcDisplay.textContent == '0' && !hasADecimal) {
+    if (calcDisplay.textContent == '0' && !isADecimal()) {
         calcDisplay.textContent = this.id;
     }
     else {
@@ -68,7 +67,6 @@ function storeOperator() {
     if (!resetDisplay && numbersChosen != 2) {
         numbersChosen++;
     }
-    hasADecimal = false;
     if (numbersChosen == 2) {
         evaluate();
     }
@@ -83,14 +81,6 @@ function evaluate() {
         return;
     }
     const result = operate(operatorStored, firstNumberDisplayed, currentNumberDisplayed);
-    if (this.className == 'evaluator' || this.id == '/') {
-        if (isADecimal(result)) {
-            hasADecimal = true;
-        }
-        else {
-            hasADecimal = false;
-        }
-    }
     calcDisplay.textContent = result;
     if (this.className == 'evaluator') {
         numbersChosen = 0;
@@ -115,7 +105,6 @@ function clear() {
     operatorStored = null;
     resetDisplay = false;
     numbersChosen = 0;
-    hasADecimal = false;
     calcDisplay.textContent = '0';
     subDisplay.textContent = '';
 }
@@ -140,28 +129,29 @@ function changeSign() {
 
 // Adds a decimal to the number on the display if there is not one present
 function addDecimal() {
+    // If the error 'Cannot divide by 0' is on the display, exit function without doing anything
+    if (firstNumberDisplayed == null) {
+        return;
+    }
+    let containsDecimal = isADecimal();
     // If the previous button pressed was a number
-    if (!hasADecimal && !resetDisplay) {
+    if (!containsDecimal && !resetDisplay) {
         calcDisplay.textContent += '.';
-        hasADecimal = true;
     }
     // If the previous button pressed was an operator
-    else if (!hasADecimal && resetDisplay) {
+    else if (resetDisplay) {
         calcDisplay.textContent = '0.'
         currentNumberDisplayed = 0;
         resetDisplay = false;
-        hasADecimal = true;
     }
 }
 
-// Helper function that determines whether a number is a decimal or not
-// Note: numbers such as 5. and 5.0 are NOT considered decimals
-function isADecimal(num) {
-    let absNum = Math.abs(num);
-    if (absNum - Math.floor(absNum) == 0) {
-        return false;
-    } 
-    return true;
+// Helper function that determines whether the number on the calculator display is a decimal or not
+function isADecimal() {
+    if (calcDisplay.textContent.slice(1, 2) == '.') {
+        return true
+    }
+    return false;
 }
 
 // Removes the last character from the display
@@ -175,12 +165,10 @@ function backspace() {
     else if ((displayText.length == 2 && displayText.slice(0, 1) == '-') || displayText.length == 1) {
         calcDisplay.textContent = '0';
         currentNumberDisplayed = 0;
-        hasADecimal = false;
     }
     else if (displayText.slice(-1) == '.' || displayText.slice(-2, -1) == '.') {
         calcDisplay.textContent = displayText.slice(0, -1);
         currentNumberDisplayed = calcDisplay.textContent;
-        hasADecimal = false;
     }
     else {
         calcDisplay.textContent = displayText.slice(0, -1);
@@ -197,7 +185,7 @@ function debug() {
     console.log(`operatorStored: ${operatorStored}`);
     console.log(`resetDisplay: ${resetDisplay}`);
     console.log(`numbersChosen: ${numbersChosen}`);
-    console.log(`hasADecimal: ${hasADecimal}`);
+    console.log(`isADecimal: ${isADecimal()}`);
 }
 
 // Global variables
@@ -206,7 +194,6 @@ let currentNumberDisplayed = 0;
 let operatorStored = null;
 let resetDisplay = false;
 let numbersChosen = 0; // If numbersChosen == 2, that means two inputs have been put in
-let hasADecimal = false;
 
 // DOM variables
 const calcDisplay = document.querySelector('.main-display');
