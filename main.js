@@ -39,17 +39,21 @@ function operate(operator, a, b) {
 }
 
 // Takes the number the user clicked on and adds it to the display
-function addToDisplay() {
+function addToDisplay(e) {
+    let input = this.id;
+    if (e.type == 'keydown') {
+        input = e.key;
+    }
     // If an operator button has been the most recently pressed OR the error 'Cannot divide by 0' is on the display, reset the display text
     if (resetDisplay || firstNumberDisplayed == null) {
         calcDisplay.textContent = '0';
         resetDisplay = false;
     }
     if (calcDisplay.textContent == '0' && !isADecimal()) {
-        calcDisplay.textContent = this.id;
+        calcDisplay.textContent = input;
     }
     else {
-        calcDisplay.textContent += this.id;
+        calcDisplay.textContent += input;
     }
     currentNumberDisplayed = calcDisplay.textContent;
     if (operatorStored == null) {
@@ -59,10 +63,14 @@ function addToDisplay() {
 
 // Takes the operator the user clicked on and stores it for later use with the evaluation (=) button 
 // If a pair of two numbers has already been decided, evaluate with the specified operator
-function storeOperator() {
+function storeOperator(e) {
     // If the error 'Cannot divide by 0' is on the display, make the operator buttons do nothing
     if (firstNumberDisplayed == null) {
         return;
+    }
+    let input = this.id;
+    if (e.type == 'keydown') {
+        input = e.key;
     }
     if (!resetDisplay && numbersChosen != 2) {
         numbersChosen++;
@@ -70,7 +78,7 @@ function storeOperator() {
     if (numbersChosen == 2) {
         evaluate();
     }
-    operatorStored = this.id;
+    operatorStored = input;
     resetDisplay = true;
     subDisplay.textContent = `${firstNumberDisplayed} ${operatorStored} `;
 }
@@ -133,9 +141,8 @@ function addDecimal() {
     if (firstNumberDisplayed == null) {
         return;
     }
-    let containsDecimal = isADecimal();
     // If the previous button pressed was a number
-    if (!containsDecimal && !resetDisplay) {
+    if (!isADecimal() && !resetDisplay) {
         calcDisplay.textContent += '.';
     }
     // If the previous button pressed was an operator
@@ -179,6 +186,43 @@ function backspace() {
     }
 }
 
+// Allows user to use the keyboard for input
+function keyboard(e) {
+    let code = e.keyCode;
+    let key = e.key;
+    // For numbers 0-9 (and *)
+    if ((48 <= code && code <= 57) || (96 <= code && code <= 105)) {
+        if (key == '*') {
+            storeOperator(e);
+            return;
+        }
+        else if (isNaN(key)) {
+            return;
+        }
+        addToDisplay(e);
+    }
+    // For operators +, -, *, /
+    else if (key == '+' || key == '-' || key == '*' || key == '/') {
+        storeOperator(e);
+    }
+    // For Enter (ENTER or =)
+    else if (code == 13 || code == 187) {
+        evaluate();
+    }
+    // For clear (Esc)
+    else if (code == 27) {
+        clear();
+    }
+    // For decimal (.)
+    else if (key == '.') {
+        addDecimal();
+    }
+    // For backspace
+    else if (code == 8) {
+        backspace();
+    }
+}
+
 function debug() {
     console.log(`firstNumberDisplayed: ${firstNumberDisplayed}`);
     console.log(`currentNumberDisplayed: ${currentNumberDisplayed}`);
@@ -218,3 +262,5 @@ clearButton.addEventListener('click', clear);
 unaryButton.addEventListener('click', changeSign);
 decimalButton.addEventListener('click', addDecimal);
 backspaceButton.addEventListener('click', backspace);
+
+window.addEventListener('keydown', keyboard);
