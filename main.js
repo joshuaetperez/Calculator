@@ -167,7 +167,8 @@ function isADecimal(num) {
 // Removes the last character from the display
 function backspace() {
     let displayText = calcDisplay.textContent;
-    if (displayText == '0') {
+    // If the number 0 is on the display OR the error 'Cannot divide by 0' is on the display, exit function without doing anything
+    if (displayText == '0' || firstNumberDisplayed == null) {
         return;
     }
     // If the number in the display is a single digit integer, replace it with a 0
@@ -176,7 +177,7 @@ function backspace() {
         currentNumberDisplayed = 0;
         hasADecimal = false;
     }
-    else if (displayText.slice(-2, -1) == '.') {
+    else if (displayText.slice(-1) == '.' || displayText.slice(-2, -1) == '.') {
         calcDisplay.textContent = displayText.slice(0, -1);
         currentNumberDisplayed = calcDisplay.textContent;
         hasADecimal = false;
