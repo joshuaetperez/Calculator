@@ -41,7 +41,7 @@ function operate(operator, a, b) {
 // Takes the number the user clicked on and adds it to the display
 function addToDisplay() {
     // If an operator button has been the most recently pressed OR the error 'Cannot divide by 0' is on the display, reset the display text
-    if (resetDisplay || (firstNumberDisplayed == null && currentNumberDisplayed == null)) {
+    if (resetDisplay || firstNumberDisplayed == null) {
         calcDisplay.textContent = '0';
         hasADecimal = false;
         resetDisplay = false;
@@ -56,21 +56,20 @@ function addToDisplay() {
     if (operatorStored == null) {
         firstNumberDisplayed = currentNumberDisplayed;
     }
-    lastPressedButtonWasNumber = true;
 }
 
 // Takes the operator the user clicked on and stores it for later use with the evaluation (=) button 
 // If a pair of two numbers has already been decided, evaluate with the specified operator
 function storeOperator() {
     // If the error 'Cannot divide by 0' is on the display, make the operator buttons do nothing
-    if (firstNumberDisplayed == null && currentNumberDisplayed == null) {
+    if (firstNumberDisplayed == null) {
         return;
     }
     if (!resetDisplay && numbersChosen != 2) {
         numbersChosen++;
     }
     hasADecimal = false;
-    if (numbersChosen == 2 && lastPressedButtonWasNumber) {
+    if (numbersChosen == 2) {
         evaluate();
     }
     operatorStored = this.id;
@@ -107,7 +106,6 @@ function evaluate() {
         currentNumberDisplayed = result;
     }
     operatorStored = null;
-    lastPressedButtonWasNumber = false;
 }
 
 // Resets all global variables to initial values and resets both displays
@@ -117,7 +115,6 @@ function clear() {
     operatorStored = null;
     resetDisplay = false;
     numbersChosen = 0;
-    lastPressedButtonWasNumber = true;
     hasADecimal = false;
     calcDisplay.textContent = '0';
     subDisplay.textContent = '';
@@ -126,7 +123,7 @@ function clear() {
 // Changes the sign of the displayed number
 function changeSign() {
     // If the number 0 is on the display OR the error 'Cannot divide by 0' is on the display, exit function without doing anything
-    if (currentNumberDisplayed == 0 || (firstNumberDisplayed == null && currentNumberDisplayed == null)) {
+    if (currentNumberDisplayed == 0 || firstNumberDisplayed == null) {
         return;
     }
     else if (currentNumberDisplayed > 0) {
@@ -193,15 +190,14 @@ function backspace() {
     }
 }
 
-// function debug() {
-//     console.log(`firstNumberDisplayed: ${firstNumberDisplayed}`);
-//     console.log(`currentNumberDisplayed: ${currentNumberDisplayed}`);
-//     console.log(`operatorStored: ${operatorStored}`);
-//     console.log(`resetDisplay: ${resetDisplay}`);
-//     console.log(`numbersChosen: ${numbersChosen}`);
-//     console.log(`lastPressedButtonWasNumber: ${lastPressedButtonWasNumber}`);
-//     console.log(`hasADecimal: ${hasADecimal}`);
-// }
+function debug() {
+    console.log(`firstNumberDisplayed: ${firstNumberDisplayed}`);
+    console.log(`currentNumberDisplayed: ${currentNumberDisplayed}`);
+    console.log(`operatorStored: ${operatorStored}`);
+    console.log(`resetDisplay: ${resetDisplay}`);
+    console.log(`numbersChosen: ${numbersChosen}`);
+    console.log(`hasADecimal: ${hasADecimal}`);
+}
 
 // Global variables
 let firstNumberDisplayed = 0;
@@ -209,7 +205,6 @@ let currentNumberDisplayed = 0;
 let operatorStored = null;
 let resetDisplay = false;
 let numbersChosen = 0; // If numbersChosen == 2, that means two inputs have been put in
-let lastPressedButtonWasNumber = true;
 let hasADecimal = false;
 
 // DOM variables
