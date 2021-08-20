@@ -1,20 +1,39 @@
+body, html {
+    height: 100%;
+    display: grid;
+}
+
 .container {
-    width: 45%;
-    margin: 0 auto;
+    height: 500px;
+    width: 400px;
+    margin: auto;
+    padding: 15px;
+    border: 1px #333 solid;
+}
+
+.display {
+    border: 1px #333 solid;
+    margin-bottom: 15px;
 }
 
 .sub-display {
     text-align: center;
+    border: 1px red solid;
+    min-height: 30px;
 }
 
 .main-display {
     text-align: center;
-    margin: 10px 0;
+    border: 1px orange solid;
+    min-height: 30px;
 }
 
 .grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    aspect-ratio: 1;
+    border: 1px blue solid;
 }
 
 .zero {
