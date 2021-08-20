@@ -44,7 +44,7 @@ function addToDisplay(e) {
     if (e.type == 'keydown') {
         input = e.key;
     }
-    if (calcDisplay.textContent.length > 21) {
+    if (calcDisplay.textContent.length > 15 && !resetDisplay) {
         return;
     }
     // If an operator button has been the most recently pressed OR the error 'Cannot divide by 0' is on the display, reset the display text
@@ -52,7 +52,7 @@ function addToDisplay(e) {
         calcDisplay.textContent = '0';
         resetDisplay = false;
     }
-    if (calcDisplay.textContent == '0' && !isADecimal()) {
+    if (calcDisplay.textContent == '0' && !isDecimal()) {
         calcDisplay.textContent = input;
     }
     else {
@@ -150,7 +150,7 @@ function addDecimal() {
         return;
     }
     // If the previous button pressed was a number
-    if (!isADecimal() && !resetDisplay) {
+    if (!isDecimal() && !resetDisplay) {
         calcDisplay.textContent += '.';
     }
     // If the previous button pressed was an operator
@@ -162,8 +162,8 @@ function addDecimal() {
 }
 
 // Helper function that determines whether the number on the calculator display is a decimal or not
-function isADecimal() {
-    if (calcDisplay.textContent.slice(1, 2) == '.') {
+function isDecimal() {
+    if (calcDisplay.textContent.includes('.')) {
         return true
     }
     return false;
@@ -270,7 +270,7 @@ function debug() {
     console.log(`operatorStored: ${operatorStored}`);
     console.log(`resetDisplay: ${resetDisplay}`);
     console.log(`numbersChosen: ${numbersChosen}`);
-    console.log(`isADecimal: ${isADecimal()}`);
+    console.log(`isDecimal: ${isDecimal()}`);
 }
 
 // Global variables
