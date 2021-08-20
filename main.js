@@ -83,7 +83,7 @@ function storeOperator(e) {
     }
     operatorStored = input;
     resetDisplay = true;
-    subDisplay.textContent = `${firstNumberDisplayed} ${operatorStored} `;
+    subDisplay.textContent = `${firstNumberDisplayed} ${operatorStored} \u00A0`;
 }
 
 // Calculates the result of the inputs given by the user
@@ -91,18 +91,21 @@ function evaluate() {
     if (operatorStored == null) {
         return;
     }
-    const result = operate(operatorStored, firstNumberDisplayed, currentNumberDisplayed);
-    calcDisplay.textContent = result;
-    if (this.className == 'evaluator') {
+    let result = operate(operatorStored, firstNumberDisplayed, currentNumberDisplayed);
+    result = roundDecimal(result);
+    if (this.className != 'operator') {
         numbersChosen = 0;
-        subDisplay.textContent = `${firstNumberDisplayed} ${operatorStored} ${currentNumberDisplayed} = `;
+        subDisplay.textContent = `${firstNumberDisplayed} ${operatorStored} ${currentNumberDisplayed} = \u00A0`;
     }
-    if (result == 'Cannot divide by 0') {
+    // If result is a 'Cannot divide by 0' error
+    if (isNaN(result)) {
+        calcDisplay.textContent = 'Cannot divide by 0';
         firstNumberDisplayed = null;
         currentNumberDisplayed = null;
         numbersChosen = 0;
     }
     else {
+        calcDisplay.textContent = result;
         firstNumberDisplayed = result;
         currentNumberDisplayed = result;
     }
@@ -237,6 +240,26 @@ function preventFocus(event) {
       // No previous focus target, blur instead
       event.currentTarget.blur();
     }
+}
+
+// Helper function which rounds a number to a specified decimal place
+// From blog by Jack Moore in https://www.jacklmoore.com/notes/rounding-in-javascript/
+function round(value, decimals) {
+    return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+  }
+
+// Rounds the number on display to the 8th decimal place
+function roundDecimal(num) {
+    let roundedDecimal;
+    if (num < 0) {
+        num = -num;
+        roundedDecimal = round(num, 8);
+        roundedDecimal = -roundedDecimal;
+    }
+    else {
+        roundedDecimal = round(num, 8);
+    }
+    return roundedDecimal;
 }
 
 function debug() {
