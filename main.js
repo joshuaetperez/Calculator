@@ -226,6 +226,19 @@ function keyboard(e) {
     }
 }
 
+// Stops calculator buttons from getting focused
+// From solution by ShortFuse in https://stackoverflow.com/questions/9152096/make-an-html-element-non-focusable
+function preventFocus(event) {
+    event.preventDefault();
+    if (event.relatedTarget) {
+      // Revert focus back to previous blurring element
+      event.relatedTarget.focus();
+    } else {
+      // No previous focus target, blur instead
+      event.currentTarget.blur();
+    }
+}
+
 function debug() {
     console.log(`firstNumberDisplayed: ${firstNumberDisplayed}`);
     console.log(`currentNumberDisplayed: ${currentNumberDisplayed}`);
@@ -252,14 +265,19 @@ const clearButton = document.querySelector('.clear');
 const unaryButton = document.querySelector('.unary');
 const decimalButton = document.querySelector('.decimal');
 const backspaceButton = document.querySelector('.backspace');
+const allButtons = document.querySelectorAll('button');
 
 // Event listeners
+allButtons.forEach(button => {
+    button.addEventListener('focus', preventFocus);
+});
 numberButtons.forEach(numberButton => {
     numberButton.addEventListener('click', addToDisplay);
 });
 operatorButtons.forEach(operatorButton => {
     operatorButton.addEventListener('click', storeOperator);
 });
+
 evaluatorButton.addEventListener('click', evaluate);
 clearButton.addEventListener('click', clear);
 unaryButton.addEventListener('click', changeSign);
