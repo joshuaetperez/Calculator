@@ -44,6 +44,9 @@ function addToDisplay(e) {
     if (e.type == 'keydown') {
         input = e.key;
     }
+    if (calcDisplay.textContent.length > 21) {
+        return;
+    }
     // If an operator button has been the most recently pressed OR the error 'Cannot divide by 0' is on the display, reset the display text
     if (resetDisplay || firstNumberDisplayed == null) {
         calcDisplay.textContent = '0';
@@ -91,20 +94,19 @@ function evaluate() {
     if (operatorStored == null) {
         return;
     }
-    let result = operate(operatorStored, firstNumberDisplayed, currentNumberDisplayed);
-    result = roundDecimal(result);
     if (this.className != 'operator') {
         numbersChosen = 0;
         subDisplay.textContent = `${firstNumberDisplayed} ${operatorStored} ${currentNumberDisplayed} = \u00A0`;
     }
-    // If result is a 'Cannot divide by 0' error
-    if (isNaN(result)) {
+    let result = operate(operatorStored, firstNumberDisplayed, currentNumberDisplayed);
+    if (result == 'Cannot divide by 0') {
         calcDisplay.textContent = 'Cannot divide by 0';
         firstNumberDisplayed = null;
         currentNumberDisplayed = null;
         numbersChosen = 0;
     }
     else {
+        result = roundDecimal(result);
         calcDisplay.textContent = result;
         firstNumberDisplayed = result;
         currentNumberDisplayed = result;
