@@ -190,6 +190,21 @@ function isDecimal() {
     return false;
 }
 
+// Helper function which rounds a number to a specified decimal place
+// From blog by Jack Moore in https://www.jacklmoore.com/notes/rounding-in-javascript/
+function round(value, decimals) {
+    return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+}
+
+// Rounds the number on display to the 8th decimal place
+function roundDecimal(num) {
+    if (!isDecimal(num)) {
+        return num;
+    }
+    let roundedDecimal = round(num, 5);
+    return roundedDecimal;
+}
+
 // Removes the last character from the display
 function backspace() {
     let displayText = calcDisplay.textContent;
@@ -254,40 +269,16 @@ function keyboard(e) {
 
 // Stops calculator buttons from getting focused
 // From solution by ShortFuse in https://stackoverflow.com/questions/9152096/make-an-html-element-non-focusable
-function preventFocus(event) {
-    event.preventDefault();
-    if (event.relatedTarget) {
+function preventFocus(e) {
+    e.preventDefault();
+    if (e.relatedTarget) {
       // Revert focus back to previous blurring element
-      event.relatedTarget.focus();
+      e.relatedTarget.focus();
     } else {
       // No previous focus target, blur instead
-      event.currentTarget.blur();
+      e.currentTarget.blur();
     }
 }
-
-// Helper function which rounds a number to a specified decimal place
-// From blog by Jack Moore in https://www.jacklmoore.com/notes/rounding-in-javascript/
-function round(value, decimals) {
-    return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
-}
-
-// Rounds the number on display to the 8th decimal place
-function roundDecimal(num) {
-    if (!isDecimal(num)) {
-        return num;
-    }
-    let roundedDecimal = round(num, 5);
-    return roundedDecimal;
-}
-
-// function debug() {
-//     console.log(`firstNumberDisplayed: ${firstNumberDisplayed}`);
-//     console.log(`currentNumberDisplayed: ${currentNumberDisplayed}`);
-//     console.log(`operatorStored: ${operatorStored}`);
-//     console.log(`resetDisplay: ${resetDisplay}`);
-//     console.log(`numbersChosen: ${numbersChosen}`);
-//     console.log(`isDecimal: ${isDecimal()}`);
-// }
 
 // Maximum number of numbers that can be on the display
 const displayNumberLength = 15;
@@ -315,6 +306,7 @@ const allButtons = document.querySelectorAll('button');
 allButtons.forEach(button => {
     button.addEventListener('focus', preventFocus);
 });
+
 numberButtons.forEach(numberButton => {
     numberButton.addEventListener('click', addToDisplay);
 });
