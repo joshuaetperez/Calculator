@@ -11,5 +11,5 @@ Keyboard support has also been added (Except for +/-)! \
     +: SHIFT + = or NUMPAD + \
     -: - or NUMPAD - \
     =: ENTER or NUMPAD Enter \
-    .: . or NUMPAD . \
+    .: . or NUMPAD .
 
