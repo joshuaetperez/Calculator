@@ -122,6 +122,7 @@ function evaluate() {
             currentNumberDisplayed = null;
         }
         else if (isNaN(result)) {
+            calcDisplay.textContent = "NaN";
             firstNumberDisplayed = null;
             currentNumberDisplayed = null;
         }
