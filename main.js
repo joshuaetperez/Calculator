@@ -44,7 +44,10 @@ function addToDisplay(e) {
     if (e.type == 'keydown') {
         input = e.key;
     }
-    if (calcDisplay.textContent.length > 15 && !resetDisplay) {
+    let lengthWithoutDecimalAndSign = calcDisplay.textContent.length;
+    if (isDecimal()) lengthWithoutDecimalAndSign--;
+    if (currentNumberDisplayed < 0) lengthWithoutDecimalAndSign--;
+    if (lengthWithoutDecimalAndSign >= displayNumberLength && !resetDisplay) {
         return;
     }
     // If an operator button has been the most recently pressed OR the error 'Cannot divide by 0' is on the display, reset the display text
@@ -162,6 +165,7 @@ function addDecimal() {
 }
 
 // Helper function that determines whether the number on the calculator display is a decimal or not
+// Does NOT work with numbers, only with strings
 function isDecimal() {
     if (calcDisplay.textContent.includes('.')) {
         return true
@@ -245,21 +249,23 @@ function preventFocus(event) {
 }
 
 // Helper function which rounds a number to a specified decimal place
-// From blog by Jack Moore in https://www.jacklmoore.com/notes/rounding-in-javascript/
-function round(value, decimals) {
-    return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+function round(value) {
+    return Number(Math.round(value * 1e8) / 1e8);
   }
 
 // Rounds the number on display to the 8th decimal place
 function roundDecimal(num) {
+    if (!isDecimal(num)) {
+        return num;
+    }
     let roundedDecimal;
     if (num < 0) {
         num = -num;
-        roundedDecimal = round(num, 8);
+        roundedDecimal = round(num);
         roundedDecimal = -roundedDecimal;
     }
     else {
-        roundedDecimal = round(num, 8);
+        roundedDecimal = round(num);
     }
     return roundedDecimal;
 }
@@ -272,6 +278,9 @@ function debug() {
     console.log(`numbersChosen: ${numbersChosen}`);
     console.log(`isDecimal: ${isDecimal()}`);
 }
+
+// Maximum number of numbers that can be on the display
+const displayNumberLength = 21;
 
 // Global variables
 let firstNumberDisplayed = 0;
