@@ -44,16 +44,16 @@ function addToDisplay(e) {
     if (e.type == 'keydown') {
         input = e.key;
     }
+    // If an operator button has been the most recently pressed OR an error is on the display, reset the display text
+    if (resetDisplay || firstNumberDisplayed == null) {
+        calcDisplay.textContent = '0';
+        resetDisplay = false;
+    }
     let lengthWithoutDecimalAndSign = calcDisplay.textContent.length;
     if (isDecimal()) lengthWithoutDecimalAndSign--;
     if (currentNumberDisplayed < 0) lengthWithoutDecimalAndSign--;
     if (lengthWithoutDecimalAndSign >= displayNumberLength && !resetDisplay) {
         return;
-    }
-    // If an operator button has been the most recently pressed OR the error 'Cannot divide by 0' is on the display, reset the display text
-    if (resetDisplay || firstNumberDisplayed == null) {
-        calcDisplay.textContent = '0';
-        resetDisplay = false;
     }
     if (calcDisplay.textContent == '0' && !isDecimal()) {
         calcDisplay.textContent = input;
@@ -70,7 +70,7 @@ function addToDisplay(e) {
 // Takes the operator the user clicked on and stores it for later use with the evaluation (=) button 
 // If a pair of two numbers has already been decided, evaluate with the specified operator
 function storeOperator(e) {
-    // If the error 'Cannot divide by 0' is on the display, make the operator buttons do nothing
+    // If an error is on the display, make the operator buttons do nothing
     if (firstNumberDisplayed == null) {
         return;
     }
@@ -109,10 +109,27 @@ function evaluate() {
         numbersChosen = 0;
     }
     else {
-        result = roundDecimal(result);
         calcDisplay.textContent = result;
-        firstNumberDisplayed = result;
-        currentNumberDisplayed = result;
+        result = roundDecimal(calcDisplay.textContent);
+        if (result > Number.MAX_SAFE_INTEGER) {
+            calcDisplay.textContent = "Number is too big";
+            firstNumberDisplayed = null;
+            currentNumberDisplayed = null;
+        }
+        else if (result < Number.MIN_SAFE_INTEGER) {
+            calcDisplay.textContent = "Number is too small";
+            firstNumberDisplayed = null;
+            currentNumberDisplayed = null;
+        }
+        else if (isNaN(result)) {
+            firstNumberDisplayed = null;
+            currentNumberDisplayed = null;
+        }
+        else {
+            calcDisplay.textContent = result;
+            firstNumberDisplayed = result;
+            currentNumberDisplayed = result;
+        }
     }
     operatorStored = null;
 }
@@ -130,7 +147,7 @@ function clear() {
 
 // Changes the sign of the displayed number
 function changeSign() {
-    // If the number 0 is on the display OR the error 'Cannot divide by 0' is on the display, exit function without doing anything
+    // If the number 0 is on the display OR if an error is on the display, exit function without doing anything
     if (currentNumberDisplayed == 0 || firstNumberDisplayed == null) {
         return;
     }
@@ -148,7 +165,7 @@ function changeSign() {
 
 // Adds a decimal to the number on the display if there is not one present
 function addDecimal() {
-    // If the error 'Cannot divide by 0' is on the display, exit function without doing anything
+    // If an error is on the display, exit function without doing anything
     if (firstNumberDisplayed == null) {
         return;
     }
@@ -176,7 +193,7 @@ function isDecimal() {
 // Removes the last character from the display
 function backspace() {
     let displayText = calcDisplay.textContent;
-    // If the number 0 is on the display OR the error 'Cannot divide by 0' is on the display, exit function without doing anything
+    // If the number 0 is on the display OR an error is on the display, exit function without doing anything
     if (displayText == '0' || firstNumberDisplayed == null) {
         return;
     }
@@ -249,38 +266,31 @@ function preventFocus(event) {
 }
 
 // Helper function which rounds a number to a specified decimal place
-function round(value) {
-    return Number(Math.round(value * 1e8) / 1e8);
-  }
+// From blog by Jack Moore in https://www.jacklmoore.com/notes/rounding-in-javascript/
+function round(value, decimals) {
+    return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+}
 
 // Rounds the number on display to the 8th decimal place
 function roundDecimal(num) {
     if (!isDecimal(num)) {
         return num;
     }
-    let roundedDecimal;
-    if (num < 0) {
-        num = -num;
-        roundedDecimal = round(num);
-        roundedDecimal = -roundedDecimal;
-    }
-    else {
-        roundedDecimal = round(num);
-    }
+    let roundedDecimal = round(num, 5);
     return roundedDecimal;
 }
 
-function debug() {
-    console.log(`firstNumberDisplayed: ${firstNumberDisplayed}`);
-    console.log(`currentNumberDisplayed: ${currentNumberDisplayed}`);
-    console.log(`operatorStored: ${operatorStored}`);
-    console.log(`resetDisplay: ${resetDisplay}`);
-    console.log(`numbersChosen: ${numbersChosen}`);
-    console.log(`isDecimal: ${isDecimal()}`);
-}
+// function debug() {
+//     console.log(`firstNumberDisplayed: ${firstNumberDisplayed}`);
+//     console.log(`currentNumberDisplayed: ${currentNumberDisplayed}`);
+//     console.log(`operatorStored: ${operatorStored}`);
+//     console.log(`resetDisplay: ${resetDisplay}`);
+//     console.log(`numbersChosen: ${numbersChosen}`);
+//     console.log(`isDecimal: ${isDecimal()}`);
+// }
 
 // Maximum number of numbers that can be on the display
-const displayNumberLength = 21;
+const displayNumberLength = 15;
 
 // Global variables
 let firstNumberDisplayed = 0;
